@@ -1,15 +1,87 @@
 package com.dharillo.teamcity.favro;
 
+import com.dharillo.teamcity.favro.auth.FavroAuthenticator;
 import jetbrains.buildServer.issueTracker.AbstractIssueProvider;
 import jetbrains.buildServer.issueTracker.IssueFetcher;
+import jetbrains.buildServer.issueTracker.IssueFetcherAuthenticator;
+import jetbrains.buildServer.issueTracker.IssueProviderType;
+import jetbrains.buildServer.serverSide.InvalidProperty;
+import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import static com.dharillo.teamcity.favro.FavroConstants.*;
+import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
+
 public class FavroIssueProvider extends AbstractIssueProvider {
-    public FavroIssueProvider( @NotNull IssueFetcher fetcher) {
-        super("Favro", fetcher);
+    public FavroIssueProvider(@NotNull IssueProviderType type, @NotNull IssueFetcher fetcher) {
+        super(type.getType(), fetcher);
+    }
+
+    @NotNull
+    @Override
+    protected IssueFetcherAuthenticator getAuthenticator() {
+        return new FavroAuthenticator(myProperties);
+    }
+
+    @Override
+    public void setProperties(@NotNull Map<String, String> properties) {
+        super.setProperties(properties);
+        myHost = getHostProperty(properties);
+        myFetchHost = myHost;
+        properties.put("host", myHost);
+    }
+
+    private String getHostProperty(Map<String, String> properties) {
+        final String organization = properties.get(PARAM_ORGANIZATION);
+        return "https://favro.com/organization/" + organization;
     }
 
     protected boolean useIdPrefix() {
         return true;
     }
+
+    @Override
+    @NotNull
+    public PropertiesProcessor getPropertiesProcessor() {
+        return FAVRO_PROP_PROCESSOR;
+    }
+
+    private static final PropertiesProcessor FAVRO_PROP_PROCESSOR = new PropertiesProcessor() {
+        @Override
+        public Collection<InvalidProperty> process(Map<String, String> map) {
+            final List<InvalidProperty> result = new ArrayList<>();
+
+            checkNotEmptyParam(result, map, PARAM_USERNAME, "Username must be specified");
+            checkNotEmptyParam(result, map, PARAM_ORGANIZATION, "Organization identifier must be specified");
+
+            // Check auth type
+            if (!checkNotEmptyParam(result, map, PARAM_AUTH_TYPE, "Auth type must be selected")) {
+                return result;
+            }
+            String authTypeParam = map.get(PARAM_AUTH_TYPE);
+
+            if (AUTH_LOGIN_PASSWORD.equals((authTypeParam))) {
+                checkNotEmptyParam(result, map, PARAM_PASSWORD, "Password must be specified");
+            } else if (AUTH_ACCESS_TOKEN.equals(authTypeParam)) {
+                checkNotEmptyParam(result, map, PARAM_ACCESS_TOKEN, "Access token must be specified");
+            }
+            return result;
+        }
+
+        private boolean checkNotEmptyParam(@NotNull final Collection<InvalidProperty> invalid,
+                                           @NotNull final Map<String, String> map,
+                                           @NotNull final String propertyName,
+                                           @NotNull final String errorMessage) {
+            if (isEmptyOrSpaces(map.get(propertyName))) {
+                invalid.add(new InvalidProperty(propertyName, errorMessage));
+                return false;
+            }
+            return true;
+        }
+    };
 }

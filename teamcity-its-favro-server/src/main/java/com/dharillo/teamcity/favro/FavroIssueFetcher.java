@@ -1,26 +1,28 @@
 package com.dharillo.teamcity.favro;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.dharillo.teamcity.favro.service.FavroIssue;
 import com.dharillo.teamcity.favro.service.IssueService;
 import jetbrains.buildServer.issueTracker.AbstractIssueFetcher;
 import jetbrains.buildServer.issueTracker.IssueData;
 import jetbrains.buildServer.util.cache.EhCacheUtil;
-import jetbrains.buildServer.util.ssl.SSLTrustStoreProvider;
+import jetbrains.buildServer.log.Loggers;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.http.auth.InvalidCredentialsException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URISyntaxException;
+
 public class FavroIssueFetcher extends AbstractIssueFetcher {
 
-    private SSLTrustStoreProvider trustStore;
+    private static final Logger LOG = Loggers.ISSUE_TRACKERS;
     /**
-     * @param cacheUtil
+     * @param cacheUtil Request cache
      * @deprecated
      */
-    public FavroIssueFetcher(@NotNull EhCacheUtil cacheUtil, @NotNull final SSLTrustStoreProvider trustStore) {
+    public FavroIssueFetcher(@NotNull EhCacheUtil cacheUtil) {
         super(cacheUtil);
-        this.trustStore = trustStore;
     }
 
     @NotNull
@@ -31,7 +33,13 @@ public class FavroIssueFetcher extends AbstractIssueFetcher {
             if (credentials == null) {
                 throw new InvalidCredentialsException();
             }
-            return createIssue(new IssueService(credentials).getIssue(url));
+            try {
+                FavroIssue issue = new IssueService(credentials).getIssue(url);
+                return createIssue(issue);
+            } catch (IllegalArgumentException | URISyntaxException e) {
+                LOG.warn(e);
+                throw e;
+            }
         });
     }
 

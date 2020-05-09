@@ -7,13 +7,13 @@ import jetbrains.buildServer.issueTracker.IssueProviderType;
 import org.jetbrains.annotations.NotNull;
 
 public class FavroIssueProviderFactory extends AbstractIssueProviderFactory {
-    protected FavroIssueProviderFactory(@NotNull IssueProviderType type, @NotNull IssueFetcher fetcher) {
+    public FavroIssueProviderFactory(@NotNull IssueProviderType type, @NotNull IssueFetcher fetcher) {
         super(type, fetcher);
     }
 
     @NotNull
     @Override
     public IssueProvider createProvider() {
-        return new FavroIssueProvider(myFetcher);
+        return new FavroIssueProvider(myType, myFetcher);
     }
 }

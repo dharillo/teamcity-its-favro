@@ -17,13 +17,11 @@ public class FavroAuthenticator implements IssueFetcherAuthenticator {
 
     public FavroAuthenticator(@NotNull final Map<String, String> properties) {
         final String authType = properties.get(PARAM_AUTH_TYPE);
-        if (AUTH_ACCESS_TOKEN.equals(authType)) {
-            final String token = properties.get(PARAM_ACCESS_TOKEN);
-            this.credentials = new TokenCredentials(token);
-        } else if (AUTH_LOGIN_PASSWORD.equals(authType)) {
+        final String organization = properties.get(PARAM_ORGANIZATION);
+        if (AUTH_LOGIN_PASSWORD.equals(authType)) {
             final String username = properties.get(PARAM_USERNAME);
             final String password = properties.get(PARAM_PASSWORD);
-            this.credentials = new UsernamePasswordCredentials(username, password);
+            this.credentials = new FavroUsernamePasswordCredentials(username, password, organization);
         }
     }
 

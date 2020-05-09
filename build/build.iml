@@ -9,6 +9,5 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="teamcity-its-favro-server" />
-    <orderEntry type="module" module-name="teamcity-its-favro" />
   </component>
 </module>
