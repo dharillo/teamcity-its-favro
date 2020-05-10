@@ -1,6 +1,7 @@
 package com.dharillo.teamcity.favro.service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +20,13 @@ public class FavroIssue {
     @NotNull
     private final Date dueDate;
     @NotNull
-    private final String description;
+    private final String detailedDescription;
     @NotNull
-    private final String url;
+    private String url;
     private final boolean archived;
     private final int sequentialId;
 
-    public FavroIssue(@NotNull String url, @NotNull String cardCommonId, @NotNull String name, boolean archived, int sequentialId, @NotNull Date startDate, @NotNull Date dueDate, @NotNull String description) {
+    public FavroIssue(@NotNull String url, @NotNull String cardCommonId, @NotNull String name, boolean archived, int sequentialId, @NotNull Date startDate, @NotNull Date dueDate, @NotNull String detailedDescription) {
         this.url = url;
         this.cardCommonId = cardCommonId;
         this.name = name;
@@ -33,12 +34,17 @@ public class FavroIssue {
         this.sequentialId = sequentialId;
         this.startDate = startDate;
         this.dueDate = dueDate;
-        this.description = description;
+        this.detailedDescription = detailedDescription;
     }
 
     @NotNull
     public String getUrl() {
         return url;
+    }
+
+    public FavroIssue setUrl(@NotNull String url) {
+        this.url = url;
+        return this;
     }
 
     @NotNull
@@ -71,13 +77,13 @@ public class FavroIssue {
 
     @NotNull
     public String getDescription() {
-        return description;
+        return detailedDescription;
     }
 
 
     @NotNull
     public static FavroIssue parse(@NotNull String serverResponse) {
-        Gson serializer = new Gson();
+        Gson serializer = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
         Type responseType = new TypeToken<MultiEntryResponse<FavroIssue>>() {}.getType();
         MultiEntryResponse<FavroIssue> data = serializer.fromJson(serverResponse, responseType);
         if (data == null) {

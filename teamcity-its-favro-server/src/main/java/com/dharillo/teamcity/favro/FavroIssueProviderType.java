@@ -4,8 +4,14 @@ import jetbrains.buildServer.issueTracker.IssueProviderType;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.dharillo.teamcity.favro.FavroConstants.*;
+
 public class FavroIssueProviderType extends IssueProviderType {
 
+    private static final String DEFAULT_ISSUE_PATTERN = "#(\\w+-\\d+)";
     @NotNull
     private final String configurationUrl;
     @NotNull
@@ -38,5 +44,14 @@ public class FavroIssueProviderType extends IssueProviderType {
     @Override
     public String getIssueDetailsUrl() {
         return this.issuePopupUrl;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, String> getDefaultProperties() {
+        return new HashMap<String, String>() {{
+            put(PARAM_AUTH_TYPE, AUTH_LOGIN_PASSWORD);
+            put(PARAM_PATTERN, DEFAULT_ISSUE_PATTERN);
+        }};
     }
 }

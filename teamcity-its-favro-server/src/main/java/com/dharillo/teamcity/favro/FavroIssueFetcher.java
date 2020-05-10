@@ -13,10 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FavroIssueFetcher extends AbstractIssueFetcher {
 
     private static final Logger LOG = Loggers.ISSUE_TRACKERS;
+    private Pattern myPattern;
+
     /**
      * @param cacheUtil Request cache
      * @deprecated
@@ -25,10 +29,15 @@ public class FavroIssueFetcher extends AbstractIssueFetcher {
         super(cacheUtil);
     }
 
+    public void setPattern(final Pattern pattern) {
+        myPattern = pattern;
+    }
+
     @NotNull
     @Override
     public IssueData getIssue(@NotNull String host, @NotNull String id, @Nullable final Credentials credentials) throws Exception {
-        final String url = getUrl(host, id);
+        final String issueId = getIssueId(id);
+        final String url = getUrl(host, issueId);
         return getFromCacheOrFetch(url, () -> {
             if (credentials == null) {
                 throw new InvalidCredentialsException();
@@ -36,11 +45,20 @@ public class FavroIssueFetcher extends AbstractIssueFetcher {
             try {
                 FavroIssue issue = new IssueService(credentials).getIssue(url);
                 return createIssue(issue);
-            } catch (IllegalArgumentException | URISyntaxException e) {
+            } catch (IllegalArgumentException e) {
                 LOG.warn(e);
                 throw e;
             }
         });
+    }
+
+    private String getIssueId(@NotNull final String idString) {
+        final Matcher matcher = myPattern.matcher(idString);
+        if (matcher.find() && matcher.groupCount() >= 1) {
+            return matcher.group(1);
+        } else {
+            return idString;
+        }
     }
 
     private IssueData createIssue(FavroIssue issue) {

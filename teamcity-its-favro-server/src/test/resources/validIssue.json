@@ -1,0 +1,58 @@
+{
+  "entities": [
+    {
+      "cardId": "30d8605b6f504a2824403286",
+      "cardCommonId": "b03cf86c39b46996e31da014",
+      "organizationId": "4b90bc5348125e5242281e6d",
+      "archived": false,
+      "position": 8,
+      "name": "Test card title",
+      "widgetCommonId": "d44ef0c7dbe1a9a5915222f6",
+      "columnId": null,
+      "isLane": false,
+      "parentCardId": "2d7ce4e90b41f060102a6e1e",
+      "detailedDescription": "Description\n\nSome description",
+      "tags": [
+        "NuL9aerJouBZEzaLx"
+      ],
+      "sequentialId": 7,
+      "startDate": "2020-04-20T07:00:00.000Z",
+      "dueDate": "2020-05-15T08:00:00.000Z",
+      "assignments": [
+        {
+          "userId": "kDRQgpJ8vBYAGfKhx",
+          "completed": false
+        }
+      ],
+      "tasksTotal": 0,
+      "tasksDone": 0,
+      "attachments": [],
+      "customFields": [
+        {
+          "customFieldId": "QS6rTxL5ApHa6skdd",
+          "total": 1
+        },
+        {
+          "customFieldId": "kGgmDHFAnGkj39rt6",
+          "value": [
+            "GssX5DSWdXAzznsbF"
+          ]
+        },
+        {
+          "customFieldId": "TEpL3smiDZBBv2uE9",
+          "total": 1
+        }
+      ],
+      "timeOnBoard": {
+        "time": 790381067,
+        "isStopped": false
+      },
+      "timeOnColumns": null,
+      "favroAttachments": []
+    }
+  ],
+  "limit": 100,
+  "page": 0,
+  "pages": 1,
+  "requestId": "06d75eab02a7dfd2dd49eab3"
+}

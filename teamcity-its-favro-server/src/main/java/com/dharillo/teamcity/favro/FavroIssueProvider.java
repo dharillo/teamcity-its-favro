@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.dharillo.teamcity.favro.FavroConstants.*;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
@@ -43,6 +45,25 @@ public class FavroIssueProvider extends AbstractIssueProvider {
 
     protected boolean useIdPrefix() {
         return true;
+    }
+
+    @NotNull
+    @Override
+    protected Pattern compilePattern(@NotNull Map<String, String> properties) {
+        final Pattern result = super.compilePattern(properties);
+        ((FavroIssueFetcher) myFetcher).setPattern(result);
+        return result;
+    }
+
+    @NotNull
+    @Override
+    protected String extractId(@NotNull final String match) {
+        Matcher m = myPattern.matcher(match);
+        if (m.find() && m.groupCount() >= 1) {
+            return m.group(1);
+        } else {
+            return super.extractId(match);
+        }
     }
 
     @Override

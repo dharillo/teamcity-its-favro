@@ -24,24 +24,29 @@ import static com.dharillo.teamcity.favro.FavroConstants.PATTERN_DEFAULT;
 public class IssueService {
     @NotNull
     private final Credentials credentials;
+    private final HttpClient client;
     private static final String API_CARD_ENDPOINT = "https://favro.com/api/v1/cards/";
 
     public IssueService(@NotNull final Credentials credentials) {
-        this.credentials = credentials;
+        this(credentials, createClient());
     }
 
-    public FavroIssue getIssue(@NotNull String url) throws IllegalArgumentException, URISyntaxException {
+    public IssueService(@NotNull final Credentials credentials, @NotNull HttpClient client) {
+        this.credentials = credentials;
+        this.client = client;
+    }
+
+    public FavroIssue getIssue(@NotNull String url) throws IllegalArgumentException {
         if (url.isEmpty()) {
             throw new IllegalArgumentException("Invalid url");
         }
         final int sequentialId = getSequentialId(url);
-        return getFavroIssue(sequentialId);
+        return getFavroIssue(sequentialId).setUrl(url);
     }
 
     @Nullable
     private FavroIssue getFavroIssue(int sequentialId) {
         try {
-            HttpClient client = getClient();
             HttpGet request = getRequest(sequentialId);
             HttpResponse response = client.execute(request);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
@@ -55,7 +60,7 @@ public class IssueService {
     }
 
     @NotNull
-    private HttpClient getClient() {
+    private static HttpClient createClient() {
         return HttpClientBuilder.create().build();
     }
 
