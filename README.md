@@ -1,6 +1,7 @@
-# TeamCity server-side plugin
+# TeamCity Favro issue tracker plugin 
 
 ![Java CI with Maven](https://github.com/dharillo/teamcity-its-favro/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=dharillo/teamcity-its-favro)](https://dependabot.com)
 
 TeamCity plugin to use Favro as Issue Tracker
 
