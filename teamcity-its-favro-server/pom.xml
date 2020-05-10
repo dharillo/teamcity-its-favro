@@ -4,7 +4,7 @@
   <parent>
     <artifactId>teamcity-its-favro</artifactId>
     <groupId>com.dharillo.teamcity.favro</groupId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
   <artifactId>teamcity-its-favro-server</artifactId>
   <packaging>jar</packaging>
@@ -52,6 +52,13 @@
       <version>3.3.3</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version>
+        <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -71,7 +78,7 @@
         <version>3.0.0-M4</version>
         <configuration>
           <excludes>
-            <exclude/>
+            <exclude />
           </excludes>
         </configuration>
       </plugin>

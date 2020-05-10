@@ -32,19 +32,23 @@ public class FavroIssueProvider extends AbstractIssueProvider {
 
     @Override
     public void setProperties(@NotNull Map<String, String> properties) {
-        super.setProperties(properties);
+        patchWithPattern(properties);
         myHost = getHostProperty(properties);
         myFetchHost = myHost;
         properties.put("host", myHost);
+        super.setProperties(properties);
+    }
+
+    private void patchWithPattern(Map<String, String> properties) {
+        String patternTemplate = properties.get(PARAM_PATTERN);
+        if (patternTemplate == null || isEmptyOrSpaces(patternTemplate)) {
+            properties.put(PARAM_PATTERN, FavroIssueProviderType.DEFAULT_ISSUE_PATTERN);
+        }
     }
 
     private String getHostProperty(Map<String, String> properties) {
         final String organization = properties.get(PARAM_ORGANIZATION);
-        return "https://favro.com/organization/" + organization;
-    }
-
-    protected boolean useIdPrefix() {
-        return true;
+        return String.format("https://favro.com/organization/%s/", organization);
     }
 
     @NotNull

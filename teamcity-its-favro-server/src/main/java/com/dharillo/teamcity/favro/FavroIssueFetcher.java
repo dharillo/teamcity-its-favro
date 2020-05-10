@@ -12,7 +12,6 @@ import org.apache.http.auth.InvalidCredentialsException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +35,7 @@ public class FavroIssueFetcher extends AbstractIssueFetcher {
     @NotNull
     @Override
     public IssueData getIssue(@NotNull String host, @NotNull String id, @Nullable final Credentials credentials) throws Exception {
+        LOG.info(String.format("GetIssue: HOST=%s | ID=%s", host, id));
         final String issueId = getIssueId(id);
         final String url = getUrl(host, issueId);
         return getFromCacheOrFetch(url, () -> {

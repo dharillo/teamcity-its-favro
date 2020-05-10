@@ -11,7 +11,7 @@ import static com.dharillo.teamcity.favro.FavroConstants.*;
 
 public class FavroIssueProviderType extends IssueProviderType {
 
-    private static final String DEFAULT_ISSUE_PATTERN = "#(\\w+-\\d+)";
+    public static final String DEFAULT_ISSUE_PATTERN = "#(\\w+-\\d+)";
     @NotNull
     private final String configurationUrl;
     @NotNull
