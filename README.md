@@ -13,13 +13,13 @@ TeamCity plugin to use Favro as Issue Tracker
 
 ## Installation
 
+The plugin is available at [Jetbrains plugins](https://plugins.jetbrains.com/plugin/14286-favro-issue-tracker)
+
 1. Go to the administration section of TeamCity
 
 2. In the left side menu, at the bottom, click on Plugin List
 
-3. Click on upload ZIP
-
-4. Upload the generated ZIP
+3. Add the plugin from the Jetbrains plugin repository 
 
 ## Configuration
 
